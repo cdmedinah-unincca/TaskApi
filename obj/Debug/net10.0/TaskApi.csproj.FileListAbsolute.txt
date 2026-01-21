@@ -31,3 +31,5 @@
 /Users/cristianmedina/Documents/EXELII/TaskApi/obj/Debug/net10.0/TaskApi.pdb
 /Users/cristianmedina/Documents/EXELII/TaskApi/obj/Debug/net10.0/TaskApi.genruntimeconfig.cache
 /Users/cristianmedina/Documents/EXELII/TaskApi/obj/Debug/net10.0/ref/TaskApi.dll
+/Users/cristianmedina/Documents/EXELII/TaskApi/bin/Debug/net10.0/TaskApi.postman_collection.json
+/Users/cristianmedina/Documents/EXELII/TaskApi/obj/Debug/net10.0/TaskApi.sourcelink.json

@@ -13,8 +13,8 @@ public class TasksController : ControllerBase
     [HttpPost]
     public ActionResult<TaskModel> CreateTask(TaskModel task)
     {
-        if (string.IsNullOrWhiteSpace(task.Title))
-            return BadRequest("El título es requerido.");
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         task.Id = _nextId++;
         task.IsCompleted = false;
@@ -28,15 +28,33 @@ public class TasksController : ControllerBase
         return Ok(_tasks);
     }
 
+    [HttpGet("buscar")]
+    public ActionResult<List<TaskModel>> SearchTasks([FromQuery] string q)
+    {
+        if (string.IsNullOrWhiteSpace(q))
+            return BadRequest("El parámetro 'q' es requerido.");
+
+        var results = _tasks
+            .Where(t => t.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                        t.Description.Contains(q, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return Ok(results);
+    }
+
     [HttpPut("{id}")]
     public IActionResult UpdateTask(int id, TaskModel updatedTask)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var task = _tasks.FirstOrDefault(t => t.Id == id);
         if (task == null)
             return NotFound();
 
         task.Title = updatedTask.Title;
         task.Description = updatedTask.Description;
+        // No se modifica IsCompleted en PUT
         return Ok(task);
     }
 
@@ -59,6 +77,17 @@ public class TasksController : ControllerBase
             return NotFound();
 
         task.IsCompleted = true;
+        return Ok(task);
+    }
+
+    [HttpPatch("{id}/pendiente")]
+    public IActionResult MarkAsPending(int id)
+    {
+        var task = _tasks.FirstOrDefault(t => t.Id == id);
+        if (task == null)
+            return NotFound();
+
+        task.IsCompleted = false;
         return Ok(task);
     }
 }
